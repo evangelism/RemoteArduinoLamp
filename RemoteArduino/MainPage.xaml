@@ -1,0 +1,20 @@
+﻿<Page
+    x:Class="RemoteArduino.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RemoteArduino"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel>
+            <Button x:Name="on" IsEnabled="False" Content="ON" Width="200" Click="on_Click"></Button>
+            <Button x:Name="off" IsEnabled="False" Content="OFF" Width="200" Click="off_Click"></Button>
+            <Button x:Name="serial" IsEnabled="True" Content="Connect USB" Width="200" Click="go_Click"></Button>
+            <Button x:Name="bt" IsEnabled="True" Content="Connect BT" Width="200" Click="go_Click"></Button>
+            <TextBlock x:Name="txt"/>
+            <ListBox x:Name="lst"/>
+        </StackPanel>
+    </Grid>
+</Page>
