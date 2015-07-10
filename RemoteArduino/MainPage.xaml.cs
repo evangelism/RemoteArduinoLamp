@@ -27,84 +27,67 @@ namespace RemoteArduino
     public sealed partial class MainPage : Page
     {
         UsbSerial usbcomm;
-        BluetoothSerial btcomm;
         RemoteDevice arduino;
 
         DispatcherTimer dt;
 
+        bool auto_mode = false;
+
         public MainPage()
         {
             this.InitializeComponent();
+            connect();
         }
 
         private void Comm_ConnectionEstablished()
         {
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,new Windows.UI.Core.DispatchedHandler(() =>
             {
-                arduino.pinMode(2, PinMode.INPUT);
                 arduino.pinMode(14, PinMode.ANALOG);
-                arduino.pinMode(15, PinMode.ANALOG);
                 arduino.pinMode(13, PinMode.OUTPUT);
-                arduino.AnalogPinUpdatedEvent += Arduino_AnalogPinUpdatedEvent;
-                arduino.DigitalPinUpdatedEvent += Arduino_DigitalPinUpdatedEvent;
                 dt.Start();
                 on.IsEnabled = true;
                 off.IsEnabled = true;
+                auto.IsEnabled = true;
             }));
         }
 
-        private async void go_Click(object sender, RoutedEventArgs e)
+        private async void connect()
         {
             dt = new DispatcherTimer() { Interval = new TimeSpan(500) };
-            dt.Tick += Dt_Tick;
-            var usb = sender == serial;
-            var dev = usb ? await UsbSerial.listAvailableDevicesAsync() : await BluetoothSerial.listAvailableDevicesAsync();
-            lst.Items.Clear();
-            foreach (var x in dev)
-            {
-                lst.Items.Add(x.Name);
-            }
-            if (usb)
-            {
-                usbcomm = new UsbSerial(dev[0]);
-                arduino = new RemoteDevice(usbcomm);
-                usbcomm.ConnectionEstablished += Comm_ConnectionEstablished;
-                usbcomm.begin(57600, SerialConfig.SERIAL_8N1);
-            }
-            else
-            {
-                btcomm = new BluetoothSerial(dev[0]);
-                arduino = new RemoteDevice(btcomm);
-                btcomm.ConnectionEstablished += Comm_ConnectionEstablished;
-                btcomm.begin(38400, SerialConfig.SERIAL_8N1);
-            }
+            dt.Tick += loop;
+            var dev = await UsbSerial.listAvailableDevicesAsync();
+            usbcomm = new UsbSerial(dev[0]);
+            arduino = new RemoteDevice(usbcomm);
+            usbcomm.ConnectionEstablished += Comm_ConnectionEstablished;
+            usbcomm.begin(57600, SerialConfig.SERIAL_8N1);
         }
 
-        private void Arduino_DigitalPinUpdatedEvent(byte pin, PinState state)
+        private void loop(object sender, object e)
         {
-            txt.Text = string.Format("Pin={0}, Value={1}", pin, state);
-        }
-
-        private void Arduino_AnalogPinUpdatedEvent(byte pin, ushort value)
-        {
-            txt.Text = string.Format("Pin={0}, Value={1}", pin, value);
-        }
-
-        private void Dt_Tick(object sender, object e)
-        {
-            arduino.pinMode(14, PinMode.ANALOG);
-            arduino.pinMode(2, PinMode.INPUT);
-            txt.Text = string.Format("A0={0}, D2={1}, TIME={2}", arduino.analogRead(0), arduino.digitalRead(2),DateTime.Now);
+            if (auto_mode)
+            {
+                arduino.pinMode(14, PinMode.ANALOG);
+                var on = arduino.analogRead(0) > 512;
+                arduino.digitalWrite(13, on ? PinState.HIGH : PinState.LOW);
+            }
         }
 
         private void on_Click(object sender, RoutedEventArgs e)
         {
+            auto_mode = false;
             arduino.digitalWrite(13, PinState.HIGH);
         }
 
         private void off_Click(object sender, RoutedEventArgs e)
         {
+            auto_mode = false;
             arduino.digitalWrite(13, PinState.LOW);
+        }
+
+        private void auto_Click(object sender, RoutedEventArgs e)
+        {
+            auto_mode = true;
         }
     }
 }

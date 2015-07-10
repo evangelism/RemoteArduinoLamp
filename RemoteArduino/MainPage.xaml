@@ -8,11 +8,10 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel>
-            <Button x:Name="on" IsEnabled="False" Content="ON" Width="200" Click="on_Click"></Button>
-            <Button x:Name="off" IsEnabled="False" Content="OFF" Width="200" Click="off_Click"></Button>
-            <Button x:Name="serial" IsEnabled="True" Content="Connect USB" Width="200" Click="go_Click"></Button>
-            <Button x:Name="bt" IsEnabled="True" Content="Connect BT" Width="200" Click="go_Click"></Button>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button x:Name="on" IsEnabled="False" Content="ON" FontSize="30" Width="150" Height="150" Click="on_Click"></Button>
+            <Button x:Name="off" IsEnabled="False" Content="OFF" FontSize="30" Width="150" Height="150" Click="off_Click"></Button>
+            <Button x:Name="auto" IsEnabled="False" Content="AUTO" FontSize="30" Width="150" Height="150" Click="auto_Click" ></Button>
             <TextBlock x:Name="txt"/>
             <ListBox x:Name="lst"/>
         </StackPanel>
