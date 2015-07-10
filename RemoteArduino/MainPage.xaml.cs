@@ -31,6 +31,8 @@ namespace RemoteArduino
 
         DispatcherTimer dt;
 
+        byte relay_pin = 7;
+
         bool auto_mode = false;
 
         public MainPage()
@@ -44,7 +46,7 @@ namespace RemoteArduino
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,new Windows.UI.Core.DispatchedHandler(() =>
             {
                 arduino.pinMode(14, PinMode.ANALOG);
-                arduino.pinMode(13, PinMode.OUTPUT);
+                arduino.pinMode(relay_pin, PinMode.OUTPUT);
                 dt.Start();
                 on.IsEnabled = true;
                 off.IsEnabled = true;
@@ -69,20 +71,20 @@ namespace RemoteArduino
             {
                 arduino.pinMode(14, PinMode.ANALOG);
                 var on = arduino.analogRead(0) > 512;
-                arduino.digitalWrite(13, on ? PinState.HIGH : PinState.LOW);
+                arduino.digitalWrite(relay_pin, on ? PinState.HIGH : PinState.LOW);
             }
         }
 
         private void on_Click(object sender, RoutedEventArgs e)
         {
             auto_mode = false;
-            arduino.digitalWrite(13, PinState.HIGH);
+            arduino.digitalWrite(relay_pin, PinState.HIGH);
         }
 
         private void off_Click(object sender, RoutedEventArgs e)
         {
             auto_mode = false;
-            arduino.digitalWrite(13, PinState.LOW);
+            arduino.digitalWrite(relay_pin, PinState.LOW);
         }
 
         private void auto_Click(object sender, RoutedEventArgs e)
