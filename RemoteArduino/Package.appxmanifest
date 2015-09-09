@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="1b746c4a-04bc-4324-bb42-d531ac7c1a9e"
+    Name="0a0f8fc9-5ea0-41e4-9e32-98f32c9a574b"
     Publisher="CN=dmitryso"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="1b746c4a-04bc-4324-bb42-d531ac7c1a9e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="0a0f8fc9-5ea0-41e4-9e32-98f32c9a574b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>RemoteArduino</DisplayName>
@@ -20,7 +20,7 @@
   </Properties>
 
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10069.0" MaxVersionTested="10.0.10069.0" />
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
   </Dependencies>
 
   <Resources>
@@ -33,10 +33,11 @@
       EntryPoint="RemoteArduino.App">
       <uap:VisualElements
         DisplayName="RemoteArduino"
-        Square150x150Logo="Assets\Logo.png"
-        Square44x44Logo="Assets\SmallLogo.png"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png"
         Description="RemoteArduino"
-        BackgroundColor="#464646">
+        BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
     </Application>
@@ -44,12 +45,12 @@
 
   <Capabilities>
     <Capability Name="internetClient" />
-    <DeviceCapability Name="serialcommunication">
-      <Device Id="any">
-        <Function Type="name:serialPort"/>
-      </Device>
-    </DeviceCapability>
-  <DeviceCapability Name="bluetooth.rfcomm">
+<DeviceCapability Name="serialcommunication">
+  <Device Id="any">
+    <Function Type="name:serialPort"/>
+  </Device>
+</DeviceCapability>
+<DeviceCapability Name="bluetooth.rfcomm">
   <Device Id="any">
     <Function Type="name:serialPort"/>
   </Device>

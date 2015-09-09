@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Maker.RemoteWiring;
+using Microsoft.Maker.Serial;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,17 +14,13 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Maker.Serial;
-using Microsoft.Maker.RemoteWiring;
-using Microsoft.Maker.Firmata;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+// Документацию по шаблону элемента "Пустая страница" см. по адресу http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace RemoteArduino
 {
-
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
     public sealed partial class MainPage : Page
     {
@@ -41,9 +39,9 @@ namespace RemoteArduino
             connect();
         }
 
-        private void Comm_ConnectionEstablished()
+        private async void Comm_ConnectionEstablished()
         {
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,new Windows.UI.Core.DispatchedHandler(() =>
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, new Windows.UI.Core.DispatchedHandler(() =>
             {
                 arduino.pinMode(14, PinMode.ANALOG);
                 arduino.pinMode(relay_pin, PinMode.OUTPUT);
@@ -59,6 +57,10 @@ namespace RemoteArduino
             dt = new DispatcherTimer() { Interval = new TimeSpan(500) };
             dt.Tick += loop;
             var dev = await UsbSerial.listAvailableDevicesAsync();
+            foreach (var x in dev)
+            {
+                System.Diagnostics.Debug.WriteLine("Found " + x.Name);
+            }
             usbcomm = new UsbSerial(dev[0]);
             arduino = new RemoteDevice(usbcomm);
             usbcomm.ConnectionEstablished += Comm_ConnectionEstablished;
@@ -91,5 +93,7 @@ namespace RemoteArduino
         {
             auto_mode = true;
         }
+
+
     }
 }
